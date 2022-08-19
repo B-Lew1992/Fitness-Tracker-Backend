@@ -10,7 +10,7 @@ async function getRoutineById(id){
       WHERE id=${id},
     `
 	);
-
+ console.log(routine);
 	return routine;
 }
 
