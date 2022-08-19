@@ -39,7 +39,7 @@ return activity
 // select and return an array of all activities
 async function attachActivitiesToRoutines(routines) {
 const routinesToReturn = [...routines];
-const bind = routines.map((_,index) => `$${index + 1}`).join(',');
+const binds = routines.map((_,index) => `$${index + 1}`).join(',');
 const routineIds = routines.map((routine) => routine.id);
 if(!routineIds?.length) return [];
 

@@ -1,4 +1,6 @@
 const client = require('./client');
+const {attachActivitiesToRoutines} = require('./activities')
+const {getRoutineActivityById} = require('./routine_activities')
 
 async function getRoutineById(id){
   const {
@@ -24,6 +26,7 @@ async function getRoutinesWithoutActivities(){
 }
 
 async function getAllRoutines() {
+  try {
   const { rows: routines } = await client.query(`
   SELECT routines.*, users.username AS "creatorName"
   FROM routines 
@@ -31,10 +34,13 @@ async function getAllRoutines() {
   ON routines."creatorId"=users.id;
 `);
 
-	return routines;
+	return await attachActivitiesToRoutines(routines)
+  } catch (error){console.error(error)
+  }
 }
 
 async function getAllRoutinesByUser({username}) {
+  try {
   const { rows: routines } = await client.query(
 		`
         SELECT routines.*, users.username AS "creatorName"
@@ -45,10 +51,12 @@ async function getAllRoutinesByUser({username}) {
         `,
 		[username]
 	);
-	return routines;
+	return attachActivitiesToRoutines(routines);
+  }catch(error){console.error(error)}
 }
 
 async function getPublicRoutinesByUser({username}) {
+  try {
   const { rows: routines } = await client.query(
 		`
             SELECT routines.*, users.username AS "creatorName"
@@ -60,10 +68,12 @@ async function getPublicRoutinesByUser({username}) {
         `,
 		[username]
 	);
-	return routines;
+	return attachActivitiesToRoutines(routines);
+  }catch(error){console.error(error)}
 }
 
 async function getAllPublicRoutines() {
+  try {
   const { rows: routines } = await client.query(`
   SELECT routines.*, users.username AS "creatorName"
   FROM routines 
@@ -72,16 +82,19 @@ async function getAllPublicRoutines() {
   WHERE routines."isPublic"=true;
 `);
 
-	return routines;
+	return await attachActivitiesToRoutines(routines);
+  }catch(error){console.error(error)}
 }
 
 async function getPublicRoutinesByActivity({id}) {
+  try {
   const { rows: routines } = await client.query(`
   SELECT routines.*, users.username AS "creatorName"
   FROM routines 
-  INNER JOIN users
+  JOIN users
   ON routines."creatorId"=users.id
-  WHERE routines."isPublic"=true
+  JOIN routine_activities ON routine_activities."routineId"=routines.id
+  WHERE routine_activities."activityId"=${id} AND routines."isPublic"=true
 `);
 
 	const { rows: routine_activities } = await client.query(`
@@ -106,12 +119,14 @@ FROM routine_activities;
 		});
 	});
 
-	return routines;
+	return attachActivitiesToRoutines(routines);
+}catch(error){console.error(error)}
 }
 
 async function createRoutine({creatorId, isPublic, name, goal}) {
+  try{
   const {
-		rows: [routine],
+		rows: [routine]
 	} = await client.query(
 		`
         INSERT INTO routines("creatorId", "isPublic", name, goal) 
@@ -122,6 +137,7 @@ async function createRoutine({creatorId, isPublic, name, goal}) {
 	);
 
 	return routine;
+  }catch(error){console.error(error)}
 }
 
 async function updateRoutine({id, isPublic, name, goal}) {
