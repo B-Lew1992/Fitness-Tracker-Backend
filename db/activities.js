@@ -46,7 +46,7 @@ if(!routineIds?.length) return [];
 try {
   const { rows: activities } = await client.query(`
     SELECT activities.*, routine_activities.duration,
-    routine_activities.count, routine_activities.id AS "routineActitivyId",
+    routine_activities.count, routine_activities.id AS "routineActivityId",
     routine_activities."routineId"
     FROM activities
     JOIN routine_activities ON routine_activities."activityId" = activities.id
