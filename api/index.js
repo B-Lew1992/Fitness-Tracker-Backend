@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { getUserById } = require('../db');
 
 apiRouter.use(async (req, res, next) => {
+
    const prefix = 'Bearer ';
    const auth = req.header('Authorization');
 
@@ -29,12 +30,15 @@ apiRouter.use(async (req, res, next) => {
          message: `Authorization token must start with ${prefix}`,
       });
    }
+
 });
 
 // GET /api/health
 apiRouter.get('/health', async (req, res) => {
+
    const message = 'All is well, enjoy the 200!';
    res.send({ message });
+
 });
 
 // ROUTER: /api/users
@@ -54,16 +58,19 @@ const routineActivitiesRouter = require('./routineActivities');
 apiRouter.use('/routine_activities', routineActivitiesRouter);
 
 apiRouter.use((req, res, next) => {
+
    next({
       error: 'Error!',
       name: 'PageNotFound',
       message: 'The page you are looking for is not here',
       status: 404,
    });
+
 });
 
 // eslint-disable-next-line no-unused-vars
 apiRouter.use((error, req, res, next) => {
+
    let errorStatus = 400;
    if (error.status) {
       errorStatus = error.status;
