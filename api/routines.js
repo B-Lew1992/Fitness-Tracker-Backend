@@ -113,8 +113,8 @@ routinesRouter.post("/:routineId/activities", async (req, res, next) => {
       ? res.send(response)
       : next({
           error: "Error!",
-          message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
           name: "CanNotDuplicateActivity/RoutineId",
+          message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
         });
   } catch (error) {
     next(error);
