@@ -1,13 +1,7 @@
 const express = require('express');
-const { addActivityToRoutine } = require('../db/routine_activities');
 const routinesRouter = express.Router();
-const {
-  getAllPublicRoutines,
-  createRoutine,
-  getRoutineById,
-  updateRoutine,
-  destroyRoutine,
-} = require('../db/routines');
+const { addActivityToRoutine } = require('../db/routine_activities');
+const { getAllPublicRoutines, createRoutine, getRoutineById, updateRoutine, destroyRoutine } = require('../db/routines');
 const { requireUser } = require('./utils');
 
 // GET /api/routines
@@ -93,8 +87,8 @@ routinesRouter.delete('/:routineId', requireUser, async (req, res, next) => {
       res.send(response);
     } else {
       next({
-        error: 'Error!',
-        name: 'NotCreatorOfRoutine',
+        error: "Error!",
+        name: "NotCreatorOfRoutine",
         message: `User ${req.user.username} is not allowed to delete ${name}`,
         status: 403,
       });
@@ -105,8 +99,9 @@ routinesRouter.delete('/:routineId', requireUser, async (req, res, next) => {
 });
 
 // POST /api/routines/:routineId/activities
-routinesRouter.post('/:routineId/activities', async (req, res, next) => {
+routinesRouter.post("/:routineId/activities", async (req, res, next) => {
   const { routineId, activityId, count, duration } = req.body;
+
   try {
     const response = await addActivityToRoutine({
       routineId,
@@ -117,9 +112,9 @@ routinesRouter.post('/:routineId/activities', async (req, res, next) => {
     response
       ? res.send(response)
       : next({
-          error: 'Error!',
+          error: "Error!",
           message: `Activity ID ${activityId} already exists in Routine ID ${routineId}`,
-          name: 'CanNotDuplicateActivity/RoutineId',
+          name: "CanNotDuplicateActivity/RoutineId",
         });
   } catch (error) {
     next(error);

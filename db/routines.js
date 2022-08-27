@@ -1,7 +1,7 @@
 const client = require('./client');
 const {attachActivitiesToRoutines} = require('./activities')
-// const {getRoutineActivityById} = require('./routine_activities')
-// const {getUserByUsername} = require('./users');
+//const {getRoutineActivityById} = require('./routine_activities')
+//const {getUserByUsername} = require('./users');
 
 async function getRoutineById(id){
   try{
